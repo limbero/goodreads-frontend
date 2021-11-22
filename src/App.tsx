@@ -48,28 +48,21 @@ const Error = styled.div`
 
 const bookWidth = 150;
 
-const BookDiv = styled.div`
+const BookLink = styled.a`
   display: inline-block;
   position: relative;
 
+  transition: transform .25s;
+  transform-origin: bottom center;
+
   width: ${bookWidth}px;
-  overflow: hidden;
-  border-radius: 3px;
-  text-align: center;
 
-  margin: 30px 20px;
+  margin: 40px 20px;
 
-  a {
-    color: #000;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  img {
-    width: 100%;
-    margin-bottom: -4px;
+  color: #000;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
   }
 
   p.read-date {
@@ -83,30 +76,70 @@ const BookDiv = styled.div`
     box-shadow: 2px 2px 5px rgba(0,0,0, 0.5);
 
     width: ${bookWidth*0.75}px;
-    top: -20px;
+    bottom: -20px;
     left: 50%;
     margin-left: -${bookWidth*0.75/2}px;
 
-    transition: opacity .15s, top .15s;
+    transition: opacity .25s, bottom .25s;
   }
-  &:hover p.read-date {
-    opacity: 1;
-    top: 10px;
+
+  &:hover {
+    transform: scale(1.1);
+
+    p.read-date {
+      opacity: 1;
+      bottom: 10px;
+    }
+
+    img {
+      transform: perspective(1000px) rotateY(-20deg);
+    }
+
+    & div {
+      right: -5px;
+    }
   }
 `;
 
+const bookRadius = "3px";
+
+const BookCover = styled.img`
+  border: 1px solid #AAA;
+  border-radius: ${bookRadius};
+  width: 100%;
+  margin-bottom: -4px;
+
+  transition: transform .25s;
+  transform-origin: center left;
+`;
+const BookPage = styled.div`
+  z-index: -1;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background-color: #FFF;
+  border: 1px solid #AAA;
+  border-radius: ${bookRadius};
+  box-sizing: border-box;
+
+  transition: right .25s;
+`;
+
 const StyledBook = ({book}: {book: Book}) => (
-  <BookDiv>
-    <a href={book.url} target="_blank" rel="noopener noreferrer">
-      <img src={book.cover_src} alt="" />
-      {
-        book.read_date
-        ? (
-          <p className="read-date">Finished:<br/>{book.read_date}</p>
-        ) : null
-      }
-    </a>
-  </BookDiv>
+  <BookLink href={book.url} target="_blank" rel="noopener noreferrer">
+    <BookCover src={book.cover_src} alt="" />
+    <BookPage/>
+    {
+      book.read_date
+      ? (
+        <p className="read-date">Finished:<br/>{book.read_date}</p>
+      ) : null
+    }
+  </BookLink>
 );
 
 enum Status {
